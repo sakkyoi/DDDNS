@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sakkyoi/DDDNS/internal/middleware"
-	"net/http"
 )
 
 func startApiServer() error {
@@ -12,14 +11,14 @@ func startApiServer() error {
 
 	r := gin.New()
 
+	// Middleware
 	r.Use(gin.Recovery())
 	r.Use(middleware.Logger())
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
+	// API Handlers
+	api := r.Group("/api")
+	api.POST("/register", register)
+	api.DELETE("/register", unregister)
 
 	return r.Run(addr)
 }
