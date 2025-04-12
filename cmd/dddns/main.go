@@ -30,8 +30,10 @@ func init() {
 	log.SetLevel(logLevel)
 
 	// initialize store
-	if true { // replace with actual condition to check if Redis is available
-		s = redis.New("localhost:6379")
+	if cfg.RedisHost != "" { // replace with actual condition to check if Redis is available
+		if s, err = redis.New(cfg.RedisHost, cfg.RedisPort, cfg.RedisDB, cfg.RedisUser, cfg.RedisPass); err != nil {
+			log.Fatal("❌ Failed to connect to Redis", "error", err)
+		}
 	} else {
 		s = memory.New()
 	}

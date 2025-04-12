@@ -14,6 +14,7 @@ type Config struct {
 	RedisHost  string `mapstructure:"redis_host"`
 	RedisPort  int    `mapstructure:"redis_port"`
 	RedisDB    int    `mapstructure:"redis_db"`
+	RedisUser  string `mapstructure:"redis_user"`
 	RedisPass  string `mapstructure:"redis_pass"`
 	LogLevel   string `mapstructure:"log_level"`
 }
@@ -26,6 +27,7 @@ func Load() *Config {
 	viper.SetDefault("redis_host", "")
 	viper.SetDefault("redis_port", "")
 	viper.SetDefault("redis_db", 0)
+	viper.SetDefault("redis_user", "")
 	viper.SetDefault("redis_pass", "")
 	viper.SetDefault("log_level", "info")
 
@@ -37,6 +39,7 @@ func Load() *Config {
 	pflag.String("redis_host", "", "Redis server host")
 	pflag.Int("redis_port", 6379, "Redis server port")
 	pflag.Int("redis_db", 0, "Redis database number")
+	pflag.String("redis_user", "", "Redis username")
 	pflag.String("redis_pass", "", "Redis password")
 	pflag.String("log_level", "info", "Log level (debug, info, warn, error, fatal)")
 	pflag.String("config", "config.yaml", "Path to config file")
