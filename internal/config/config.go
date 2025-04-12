@@ -11,6 +11,7 @@ type Config struct {
 	DNSPort    int    `mapstructure:"dns_port"`
 	ApiPort    int    `mapstructure:"api_port"`
 	TTL        int    `mapstructure:"ttl"`
+	Domain     string `mapstructure:"domain"`
 	RedisHost  string `mapstructure:"redis_host"`
 	RedisPort  int    `mapstructure:"redis_port"`
 	RedisDB    int    `mapstructure:"redis_db"`
@@ -24,6 +25,7 @@ func Load() *Config {
 	viper.SetDefault("dns_port", 53)
 	viper.SetDefault("api_port", 8080)
 	viper.SetDefault("ttl", 0)
+	viper.SetDefault("domain", "")
 	viper.SetDefault("redis_host", "")
 	viper.SetDefault("redis_port", "")
 	viper.SetDefault("redis_db", 0)
@@ -36,6 +38,7 @@ func Load() *Config {
 	pflag.Int("dns_port", 53, "DNS server port")
 	pflag.Int("api_port", 8080, "API server port")
 	pflag.Int("ttl", 0, "TTL for DNS records in seconds, 0 for no expiration")
+	pflag.String("domain", "", "Root domain for DDDNS")
 	pflag.String("redis_host", "", "Redis server host")
 	pflag.Int("redis_port", 6379, "Redis server port")
 	pflag.Int("redis_db", 0, "Redis database number")
