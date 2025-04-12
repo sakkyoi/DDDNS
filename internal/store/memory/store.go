@@ -18,36 +18,36 @@ func New() store.Store {
 	}
 }
 
-func (ms *memoryStore) Register(domain string, sourceIP string, destIP string, ttl time.Duration) error {
+func (ms *memoryStore) Register(domain string, sourceIp string, destIp string, ttl time.Duration) error {
 	ms.mu.Lock()
 	defer ms.mu.Unlock()
 
-	key := store.MakeKey(domain, sourceIP)
+	key := store.MakeKey(domain, sourceIp)
 
 	ms.store[key] = store.Record{
 		Domain:   domain,
-		SourceIP: sourceIP,
-		DestIP:   destIP,
+		SourceIp: sourceIp,
+		DestIp:   destIp,
 		TTL:      ttl,
 	}
 
 	return nil
 }
 
-func (ms *memoryStore) Lookup(domain string, sourceIP string) (string, error) {
+func (ms *memoryStore) Lookup(domain string, sourceIp string) (string, error) {
 	ms.mu.RLock()
 	defer ms.mu.RUnlock()
 
-	key := store.MakeKey(domain, sourceIP)
+	key := store.MakeKey(domain, sourceIp)
 	if record, exists := ms.store[key]; exists {
-		return record.DestIP, nil
+		return record.DestIp, nil
 	}
 
 	return "", errors.New("no entry found")
 }
 
-func (ms *memoryStore) Unregister(domain string, sourceIP string) error {
-	delete(ms.store, store.MakeKey(domain, sourceIP))
+func (ms *memoryStore) Unregister(domain string, sourceIp string) error {
+	delete(ms.store, store.MakeKey(domain, sourceIp))
 
 	return nil
 }

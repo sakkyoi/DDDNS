@@ -27,20 +27,20 @@ func New(host string, port int, db int, username string, password string) (store
 	}, nil
 }
 
-func (rs *redisStore) Register(domain string, sourceIP string, destIP string, ttl time.Duration) error {
-	key := store.MakeKey(domain, sourceIP)
+func (rs *redisStore) Register(domain string, sourceIp string, destIp string, ttl time.Duration) error {
+	key := store.MakeKey(domain, sourceIp)
 
-	return rs.client.Set(context.Background(), key, destIP, ttl).Err()
+	return rs.client.Set(context.Background(), key, destIp, ttl).Err()
 }
 
-func (rs *redisStore) Lookup(domain string, sourceIP string) (string, error) {
-	key := store.MakeKey(domain, sourceIP)
+func (rs *redisStore) Lookup(domain string, sourceIp string) (string, error) {
+	key := store.MakeKey(domain, sourceIp)
 
 	return rs.client.Get(context.Background(), key).Result()
 }
 
-func (rs *redisStore) Unregister(domain string, sourceIP string) error {
-	key := store.MakeKey(domain, sourceIP)
+func (rs *redisStore) Unregister(domain string, sourceIp string) error {
+	key := store.MakeKey(domain, sourceIp)
 
 	return rs.client.Del(context.Background(), key).Err()
 }

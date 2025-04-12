@@ -12,11 +12,14 @@ func dnsRequestHandler(w dns.ResponseWriter, r *dns.Msg) {
 		log.Debug("DNS Request", "body", r)
 	}
 
+	var sourceIp string
+
 	for _, extra := range r.Extra {
 		if opt, ok := extra.(*dns.OPT); ok {
 			for _, subOpt := range opt.Option {
 				if ecs, ok := subOpt.(*dns.EDNS0_SUBNET); ok {
 					log.Debug("ECS Info", "ip", ecs.Address, "mask", ecs.SourceNetmask)
+					sourceIp = ecs.Address.String()
 				}
 			}
 		}
@@ -27,6 +30,12 @@ func dnsRequestHandler(w dns.ResponseWriter, r *dns.Msg) {
 	m.Authoritative = true
 
 	for _, q := range r.Question {
+		// Lookup from store
+		destIp, err := s.Lookup(r.Question[0].Name, sourceIp)
+		if err != nil {
+			destIp = "127.0.0.1" // TODO this is a placeholder, need to set to a fallback ip
+		}
+
 		if q.Qtype == dns.TypeA {
 			a := &dns.A{
 				Hdr: dns.RR_Header{
@@ -35,7 +44,7 @@ func dnsRequestHandler(w dns.ResponseWriter, r *dns.Msg) {
 					Class:  dns.ClassINET,
 					Ttl:    60,
 				},
-				A: net.ParseIP("127.0.0.1"), // TODO this is a placeholder
+				A: net.ParseIP(destIp),
 			}
 
 			m.Answer = append(m.Answer, a)

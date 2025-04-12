@@ -6,18 +6,18 @@ import (
 )
 
 type Store interface {
-	Register(domain string, sourceIP string, destIP string, ttl time.Duration) error
-	Lookup(domain string, sourceIP string) (string, error)
-	Unregister(domain string, sourceIP string) error
+	Register(domain string, sourceIp string, destIp string, ttl time.Duration) error
+	Lookup(domain string, sourceIp string) (string, error)
+	Unregister(domain string, sourceIp string) error
 }
 
 type Record struct {
 	Domain   string
-	SourceIP string
-	DestIP   string
+	SourceIp string
+	DestIp   string
 	TTL      time.Duration
 }
 
-func MakeKey(domain string, sourceIP string) string {
-	return fmt.Sprintf("dddns:%s:%s", domain, sourceIP)
+func MakeKey(domain string, sourceIp string) string {
+	return fmt.Sprintf("dddns:%s:%s", domain, sourceIp)
 }
