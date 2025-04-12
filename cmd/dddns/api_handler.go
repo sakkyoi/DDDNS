@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/charmbracelet/log"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -23,7 +24,15 @@ func register(c *gin.Context) {
 	}
 
 	// register to the store
-	err := s.Register(req.Domain, c.ClientIP(), req.DestIp, 0) // TODO: set ttl
+	var domain string
+	if req.Domain == "." {
+		domain = fmt.Sprintf("%s.", cfg.Domain)
+	} else {
+		domain = fmt.Sprintf("%s.%s.", req.Domain, cfg.Domain)
+	}
+
+	err := s.Register(domain, c.ClientIP(), req.DestIp, 0) // TODO: set ttl
+
 	if err != nil {
 		log.Error(err)
 

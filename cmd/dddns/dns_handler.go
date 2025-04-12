@@ -5,6 +5,7 @@ import (
 	"github.com/charmbracelet/log"
 	"github.com/miekg/dns"
 	"net"
+	"strings"
 )
 
 func dnsRequestHandler(w dns.ResponseWriter, r *dns.Msg) {
@@ -32,12 +33,7 @@ func dnsRequestHandler(w dns.ResponseWriter, r *dns.Msg) {
 
 	for _, q := range r.Question {
 		// Lookup from store
-		domain := cfg.Domain
-		if q.Name != "." {
-			domain = fmt.Sprintf("%s.%s", q.Name, cfg.Domain)
-		}
-
-		destIp, err := s.Lookup(domain, sourceIp)
+		destIp, err := s.Lookup(fmt.Sprintf("%s.", strings.ToLower(q.Name)), sourceIp)
 		if err != nil {
 			destIp = "127.0.0.1" // TODO this is a placeholder, need to set to a fallback ip
 		}
