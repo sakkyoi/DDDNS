@@ -1,6 +1,6 @@
 # Dynamic Destination DNS (DDDNS)
 
-> **Note**: This project is experimental and not recommended for production use.
+> **⚠️ Note**: This project is experimental and not recommended for production use.
 
 ## The Idea
 
