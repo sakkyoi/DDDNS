@@ -20,5 +20,8 @@ func startApiServer() error {
 	api.POST("/register", register)
 	api.DELETE("/register", unregister)
 
+	// Fallback
+	r.NoRoute(fallback)
+
 	return r.Run(addr)
 }

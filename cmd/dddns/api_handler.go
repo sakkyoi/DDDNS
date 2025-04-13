@@ -76,3 +76,17 @@ func unregister(c *gin.Context) {
 		"message": "success",
 	})
 }
+
+func fallback(c *gin.Context) {
+	sourceIp := c.ClientIP()
+
+	c.String(http.StatusOK, fmt.Sprintf(
+		"This is a fallback page of DDDNS. \n\n"+
+			"Why Your're Here? \n"+
+			"1. Your DNS (Domain Name System) server didn't pass your information to DDDNS server due to it's privacy policy. (e.g. Cloudflare's 1.1.1.1) \n"+
+			"2. There is no record registered for your IP. \n"+
+			"3. The DNS server modified our response for some efficiency reasons. \n"+
+			"4. Your device cached the old DNS response (e.g. your browser, OS, etc.) \n\n"+
+			"Your IP: %s",
+		sourceIp))
+}
