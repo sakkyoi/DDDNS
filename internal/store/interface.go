@@ -7,7 +7,7 @@ import (
 
 type Store interface {
 	Register(domain string, sourceIp string, destIp string, ttl time.Duration) error
-	Lookup(domain string, sourceIp string) (string, error)
+	Lookup(domain string, sourceIp string, mask *uint8) ([]string, error)
 	Unregister(domain string, sourceIp string) error
 }
 

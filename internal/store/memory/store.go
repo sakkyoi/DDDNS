@@ -1,8 +1,9 @@
 package memory
 
 import (
-	"errors"
+	"fmt"
 	"github.com/sakkyoi/DDDNS/internal/store"
+	"net"
 	"sync"
 	"time"
 )
@@ -34,16 +35,35 @@ func (ms *memoryStore) Register(domain string, sourceIp string, destIp string, t
 	return nil
 }
 
-func (ms *memoryStore) Lookup(domain string, sourceIp string) (string, error) {
+func (ms *memoryStore) Lookup(domain string, sourceIp string, mask *uint8) ([]string, error) {
 	ms.mu.RLock()
 	defer ms.mu.RUnlock()
 
-	key := store.MakeKey(domain, sourceIp)
-	if record, exists := ms.store[key]; exists {
-		return record.DestIp, nil
+	var ips []string
+	if mask == nil {
+		key := store.MakeKey(domain, sourceIp)
+		if record, exists := ms.store[key]; exists {
+			ips = append(ips, record.DestIp)
+		}
+
+	} else {
+		_, cidr, err := net.ParseCIDR(fmt.Sprintf("%s/%d", sourceIp, *mask))
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse CIDR: %w", err)
+		}
+
+		for _, record := range ms.store {
+			if record.Domain == domain && cidr.Contains(net.ParseIP(record.SourceIp)) {
+				ips = append(ips, record.DestIp)
+			}
+		}
 	}
 
-	return "", errors.New("no entry found")
+	if len(ips) == 0 {
+		return nil, fmt.Errorf("no entry found for %s:%s", domain, sourceIp)
+	}
+
+	return ips, nil
 }
 
 func (ms *memoryStore) Unregister(domain string, sourceIp string) error {

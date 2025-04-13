@@ -37,11 +37,6 @@ func init() {
 	} else {
 		s = memory.New()
 	}
-
-	// check domain configuration
-	if cfg.Domain == "" {
-		log.Fatal("❌ No domain configured")
-	}
 }
 
 func main() {
