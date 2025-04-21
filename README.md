@@ -92,3 +92,7 @@ Request Body (JSON):
 ```
 
 > `.` means the root domain. You can also specify a subdomain like `sub` means `sub.example.com`.
+
+## License
+
+This project is licensed under the LGPLv3 License. See the [LICENSE](LICENSE) file for details.
